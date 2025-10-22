@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Australian Property Tax Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2834080926474637"
+     crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -72,11 +74,6 @@
             }
         }
     </style>
-
-    <!-- 1. AdSense 自动广告脚本 (放置在 <head> 标签内) -->
-    <!-- 已植入用户提供的 AdSense 客户 ID：ca-pub-2834080926474637 -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2834080926474637"
-     crossorigin="anonymous"></script>
 </head>
 <body class="p-4 md:p-8">
 
@@ -123,441 +120,545 @@
                             <!-- Expense inputs will be generated here -->
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
 
-            <!-- Results Section (Right Column) -->
-            <div class="lg:col-span-1">
-                <div class="sticky top-4 space-y-8">
-                    
-                    <!-- Calculation Results -->
-                    <div class="bg-blue-100 p-6 rounded-xl shadow-md border border-blue-300">
-                        <h2 id="section-result-title" class="text-2xl font-bold text-blue-800 mb-4 pb-2 border-b border-blue-300"></h2>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center text-gray-700">
-                                <span id="label-total-income" class="font-medium"></span>
-                                <span id="result-total-income" class="font-bold text-green-600"></span>
-                            </div>
-                            <div class="flex justify-between items-center text-gray-700">
-                                <span id="label-total-deductions" class="font-medium"></span>
-                                <span id="result-total-deductions" class="font-bold text-red-600"></span>
-                            </div>
-                            <!-- Separator -->
-                            <hr class="border-blue-300">
-                            <div class="flex justify-between items-center text-2xl">
-                                <span id="label-net-rent" class="font-extrabold text-blue-800"></span>
-                                <span id="result-net-rent" class="font-extrabold text-blue-800"></span>
-                            </div>
-                            <p id="label-tax-effect" class="text-sm text-gray-500 pt-2"></p>
-                        </div>
-                    </div>
-
-                    <!-- Visualization -->
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-                        <h3 id="section-summary-title" class="text-lg font-semibold mb-4 text-gray-700"></h3>
-                        <div class="chart-container">
-                            <canvas id="expense-chart"></canvas>
-                        </div>
-                    </div>
-                    
+            <!-- Results and Charts Section (Right Sidebar) -->
+            <div class="lg:col-span-1 space-y-8 sticky top-10">
+                
+                <div class="p-6 bg-blue-600 text-white rounded-xl shadow-lg">
+                    <h3 id="section-net-rent-title" class="text-xl font-bold mb-2"></h3>
+                    <p id="net-rent-result" class="text-4xl font-extrabold"></p>
+                    <p id="net-rent-status" class="mt-2 text-sm font-medium opacity-90"></p>
                 </div>
+
+                <!-- Annual Deductible Summary -->
+                <div class="p-6 bg-gray-100 rounded-xl shadow-md border border-gray-200">
+                    <h3 id="section-deductions-title" class="text-lg font-semibold mb-4 text-gray-700"></h3>
+                    <div class="space-y-3 text-gray-700">
+                        <div class="flex justify-between items-center">
+                            <span id="label-gross-income" class="font-medium"></span>
+                            <span id="gross-income-result" class="font-semibold text-green-700">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span id="label-total-expenses" class="font-medium"></span>
+                            <span id="total-expenses-result" class="font-semibold text-red-700">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-3 mt-3">
+                            <span id="label-borrowing-amortized" class="text-sm"></span>
+                            <span id="borrowing-amortized-result" class="text-sm font-medium text-blue-700">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span id="label-borrowing-full" class="text-sm"></span>
+                            <span id="borrowing-full-result" class="text-sm font-medium text-red-500">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Breakdown Chart -->
+                <div class="p-6 bg-white rounded-xl shadow-md border border-gray-200">
+                    <h3 id="section-chart-title" class="text-lg font-semibold mb-4 text-gray-700"></h3>
+                    <p id="chart-description" class="text-sm text-gray-500 mb-4"></p>
+                    <div class="chart-container">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Export/Action Buttons -->
+                <div class="p-6 bg-gray-100 rounded-xl shadow-md border border-gray-200">
+                    <button onclick="exportToCSV()" id="btn-export-csv" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition duration-300 shadow-md"></button>
+                </div>
+
+                <!-- Disclaimer -->
+                <footer class="text-center text-xs text-gray-500 mt-10 p-4 border-t">
+                    <span id="disclaimer"></span>
+                </footer>
             </div>
+
         </div>
-
-        <!-- Footer / AdSense Slot -->
-        <footer class="p-6 md:p-10 border-t bg-gray-50 rounded-b-2xl">
-            <!-- Disclaimer and Notes -->
-            <p id="disclaimer" class="text-xs text-gray-500 text-center mb-4"></p>
-            
-            <!-- AdSense Ad Placeholder (Below Calculation Summary) -->
-            <div class="mt-8 pt-8 border-t border-gray-200 text-center">
-                <p class="text-sm text-gray-500 mb-2">--- AdSense 广告位 ---</p>
-                <!-- 2. AdSense 广告单元代码 (替换下面的 data-ad-slot) -->
-                <!-- 注意：data-ad-client 已更新为 ca-pub-2834080926474637 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2834080926474637"
-                     data-ad-slot="YOUR_AD_UNIT_ID" 
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </footer>
-
     </div>
 
-    <!-- JavaScript Logic -->
     <script>
-        // --- Configuration and Data ---
-        const LANGUAGES = {
-            en: {
-                title: "Australian Rental Property Tax Calculator",
-                lang_en: "English",
-                lang_zh: "中文",
-                section_input_title: "Rental Income & Expenses (Annual)",
-                section_loan_title: "Loan & Property Details",
-                label_loan_term: "Loan Term (Years)",
-                section_income_title: "Income",
-                section_expense_title: "Expenses & Deductions",
-                section_result_title: "Taxable Result Summary",
-                label_total_income: "Total Gross Income",
-                label_total_deductions: "Total Deductions",
-                label_net_rent: "Net Rent (Taxable Income/Loss)",
-                section_summary_title: "Deductions Breakdown",
-                disclaimer: "*Disclaimer: This is an estimation tool based on ATO guidelines (2024). It is not financial or tax advice. Consult a registered tax professional for specific advice.",
-                
-                // Income Labels
-                income: {
-                    rent: { label: "Rent Received (Yearly)", tooltip: "Total rent collected during the financial year.", default: 25000 },
-                    other: { label: "Other Income (e.g., Insurance Payouts)", tooltip: "Any other income related to the property.", default: 0 }
-                },
+        const currencySymbol = '$';
+        let currentLang = 'en';
+        let expenseChart;
 
-                // Expense Labels (ATO Categories)
-                expense: {
-                    interest: { label: "Loan Interest", tooltip: "Interest paid on the loan used to purchase the property.", amortize: false, default: 15000 },
-                    council_rates: { label: "Council Rates", tooltip: "Local government rates/taxes.", amortize: false, default: 1500 },
-                    water_charges: { label: "Water Charges", tooltip: "Water usage and service charges.", amortize: false, default: 800 },
-                    landlord_insurance: { label: "Landlord Insurance", tooltip: "Insurance premiums specific to renting out the property.", amortize: false, default: 600 },
-                    body_corporate: { label: "Body Corporate Fees (Strata)", tooltip: "Fees paid to the body corporate/strata.", amortize: false, default: 3000 },
-                    property_agent_fees: { label: "Property Agent Fees/Commission", tooltip: "Fees paid to the property manager.", amortize: false, default: 2000 },
-                    repairs_maintenance: { label: "Repairs & Maintenance", tooltip: "General repairs (e.g., fixing a broken fence). Excludes capital improvements.", amortize: false, default: 1000 },
-                    borrowing_expenses: { label: "Borrowing Expenses (e.g., Loan Fees)", tooltip: "Costs incurred to get the loan (e.g., loan establishment fees). Must be amortised over 5 years if total is >$100.", amortize: true, default: 1500, threshold: 100, years: 5 },
-                    depreciation: { label: "Capital Allowances (Depreciation)", tooltip: "Deduction for the wear and tear of plant and equipment (e.g., ovens, carpets). Requires a Depreciation Schedule.", amortize: false, default: 3000 },
-                    capital_works: { label: "Capital Works Deductions (Building Write-off)", tooltip: "Deduction for the cost of the building structure itself (usually 2.5% p.a.).", amortize: false, default: 4000 },
-                    other_expenses: { label: "Other Expenses (e.g., Stationery, Travel)", tooltip: "Any other necessary rental expenses (e.g., travel to inspect property, accounting fees).", amortize: false, default: 500 }
-                }
+        // --- LANGUAGE DICTIONARY ---
+        const translations = {
+            en: {
+                title: 'Australian Property Tax Calculator',
+                lang_en: 'English',
+                lang_zh: '中文',
+                section_input_title: '1. Input Annual Figures (ATO Categories D-V)',
+                section_loan_title: 'Loan Information',
+                label_loan_term: 'Remaining Loan Term (Years)',
+                section_income_title: '2. Rental Income',
+                section_expense_title: '3. Rental Expenses',
+                section_net_rent_title: 'Annual Net Rent (Taxable/Deductible)',
+                section_deductions_title: 'Annual Totals Breakdown',
+                label_gross_income: 'Gross Income (C)',
+                label_total_expenses: 'Total Expenses (W)',
+                label_borrowing_amortized: 'Borrowing Expenses (> $100, Amortized)',
+                label_borrowing_full: 'Borrowing Expenses (≤ $100, Fully Deductible)',
+                section_chart_title: 'Expense Breakdown Visualization',
+                chart_description: 'Percentage of total expenses by category (excluding fully deductible Borrowing Expenses).',
+                btn_export_csv: 'Export to CSV (Excel)',
+                disclaimer: 'Disclaimer: This tool is for estimation only and does not constitute professional tax advice. Consult a licensed Registered Tax Agent.',
+                net_rent_positive: 'Taxable Income',
+                net_rent_negative: 'Tax Deductible Loss',
+                net_rent_zero: 'Net Zero',
+                
+                // ATO Categories (Income and Expenses D-V)
+                income_A: 'A: Rental income',
+                income_B: 'B: Other rental related income',
+                expense_D: 'D: Advertising for tenants',
+                expense_E: 'E: Body corporate fees',
+                expense_F: 'F: Borrowing expenses',
+                expense_G: 'G: Cleaning',
+                expense_H: 'H: Council rates',
+                expense_I: 'I: Capital allowances (Depreciation on plant)',
+                expense_J: 'J: Gardening/lawn mowing',
+                expense_K: 'K: Insurance',
+                expense_L: 'L: Interest on loan(s)',
+                expense_M: 'M: Land tax',
+                expense_N: 'N: Legal fees',
+                expense_O: 'O: Pest control',
+                expense_P: 'P: Property agent fees/commission',
+                expense_Q: 'Q: Repairs and maintenance',
+                expense_R: 'R: Capital works deductions (Special building write-off)',
+                expense_S: 'S: Stationery, telephone and postage',
+                expense_T: 'T: Travel expenses',
+                expense_U: 'U: Water charges',
+                expense_V: 'V: Sundry rental expenses',
+
+                // Tooltip Content (Based on ATO Schedule)
+                tip_A: 'Rental income includes rent, reimbursed expenses, and insurance payouts for lost rent.',
+                tip_B: 'Other income related to the rental, such as payments for cancelling a lease.',
+                tip_D: 'Costs directly related to finding a tenant (e.g., website listings, agent fees for finding tenants).',
+                tip_E: 'Deductible body corporate fees, excluding amounts specifically allocated to a Sinking Fund for capital works.',
+                tip_F: 'Costs of obtaining the loan (e.g., application fees, LMI). If > $100, they are amortized over 5 years or the remaining loan term, whichever is less.',
+                tip_G: 'Cleaning costs incurred during the rental period or immediately before a new tenant moves in.',
+                tip_H: 'Fees charged by the local council for services. Must be apportioned if the property was not rented for the full year.',
+                tip_I: 'Deduction for the wear and tear of depreciating assets (e.g., appliances, air conditioners). This is a non-cash expense.',
+                tip_J: 'Ongoing costs for maintaining the gardens and lawns.',
+                tip_K: 'Premiums for building, contents, and landlord insurance.',
+                tip_L: 'Interest charged on money borrowed for the investment property. Must be apportioned if the loan is mixed-purpose (investment and private use).',
+                tip_M: 'Annual tax levied by the state/territory on land ownership. Must be apportioned if the property was not rented for the full year.',
+                tip_N: 'Legal fees related to income collection or lease termination. Legal fees for purchase/sale are generally capital in nature.',
+                tip_O: 'Costs associated with pest control and eradication.',
+                tip_P: 'Fees paid to a real estate agent for property management services (excluding tenant finding fees, which are D).',
+                tip_Q: 'Costs of repairing damage or deterioration (e.g., fixing a broken fence). Not deductible if the expense is for capital improvement or replacement.',
+                tip_R: 'Deduction for the decline in value of the building structure itself (needs Quantity Surveyor Report). This is a non-cash expense.',
+                tip_S: 'Expenses for stationary, phone calls, and postage related to managing the property.',
+                tip_T: 'Costs of inspecting the property. Must be clearly separated from private travel.',
+                tip_U: 'Water usage charges paid by the landlord.',
+                tip_V: 'Miscellaneous expenses not listed elsewhere (e.g., bank charges on the property\'s bank account).',
             },
             zh: {
-                title: "澳大利亚出租物业税务计算器",
-                lang_en: "英文",
-                lang_zh: "中文",
-                section_input_title: "年度租金收入与支出",
-                section_loan_title: "贷款与物业详情",
-                label_loan_term: "贷款期限 (年)",
-                section_income_title: "收入",
-                section_expense_title: "支出与抵扣项",
-                section_result_title: "应税结果摘要",
-                label_total_income: "总收入",
-                label_total_deductions: "总抵扣额",
-                label_net_rent: "净租金 (应税收入/亏损)",
-                section_summary_title: "抵扣项细分",
-                disclaimer: "*免责声明：这是一个基于 ATO 指南（2024财年）的估算工具。它不构成财务或税务建议。请咨询注册税务专业人士获取具体建议。",
+                title: '澳洲房产税务计算器',
+                lang_en: 'English',
+                lang_zh: '中文',
+                section_input_title: '1. 输入年度数据 (ATO 费用项目 D-V)',
+                section_loan_title: '贷款信息',
+                label_loan_term: '剩余贷款年限',
+                section_income_title: '2. 租金收入',
+                section_expense_title: '3. 租金支出',
+                section_net_rent_title: '年度租金净额 (应税/可抵扣)',
+                section_deductions_title: '年度总额明细',
+                label_gross_income: '总收入 (C)',
+                label_total_expenses: '总支出 (W)',
+                label_borrowing_amortized: '借贷成本 (> $100, 自动摊销)',
+                label_borrowing_full: '借贷成本 (≤ $100, 全额抵扣)',
+                section_chart_title: '支出占比可视化',
+                chart_description: '按类别划分的总支出百分比 (不包括可全额抵扣的借贷成本)。',
+                btn_export_csv: '导出为 CSV (Excel)',
+                disclaimer: '免责声明: 本工具仅供估算参考，不构成专业税务建议。报税前请务必咨询持牌税务代理或会计师。',
+                net_rent_positive: '应税收入',
+                net_rent_negative: '可抵扣亏损',
+                net_rent_zero: '净额为零',
 
-                // Income Labels
-                income: {
-                    rent: { label: "租金收入 (年度)", tooltip: "财政年度内收取的总租金。", default: 25000 },
-                    other: { label: "其他收入 (如：保险理赔)", tooltip: "与物业相关的任何其他收入。", default: 0 }
-                },
+                // ATO Categories (Income and Expenses D-V)
+                income_A: 'A: 租金收入',
+                income_B: 'B: 其他租金相关收入',
+                expense_D: 'D: 招租广告费',
+                expense_E: 'E: 物业管理费',
+                expense_F: 'F: 借贷成本 (Borrowing expenses)',
+                expense_G: 'G: 清洁费',
+                expense_H: 'H: 市政费 (Council rates)',
+                expense_I: 'I: 资本抵扣 (设备折旧 Capital allowances)',
+                expense_J: 'J: 园艺/割草费',
+                expense_K: 'K: 保险费',
+                expense_L: 'L: 贷款利息',
+                expense_M: 'M: 土地税 (Land tax)',
+                expense_N: 'N: 法律费用',
+                expense_O: 'O: 害虫防治费',
+                expense_P: 'P: 房产中介费/佣金',
+                expense_Q: 'Q: 维修与保养',
+                expense_R: 'R: 资本工程抵扣 (特殊建筑折旧 Capital works)',
+                expense_S: 'S: 文具、电话和邮费',
+                expense_T: 'T: 差旅费',
+                expense_U: 'U: 水费',
+                expense_V: 'V: 杂项租金支出',
                 
-                // Expense Labels (ATO Categories)
-                expense: {
-                    interest: { label: "贷款利息", tooltip: "用于购买出租物业的贷款利息。", amortize: false, default: 15000 },
-                    council_rates: { label: "市政费", tooltip: "地方政府收取的费用/税款。", amortize: false, default: 1500 },
-                    water_charges: { label: "水费", tooltip: "水费和服务费。", amortize: false, default: 800 },
-                    landlord_insurance: { label: "房东保险", tooltip: "专用于出租物业的保险费。", amortize: false, default: 600 },
-                    body_corporate: { label: "业主法团费用 (Strata)", tooltip: "向业主法团支付的费用。", amortize: false, default: 3000 },
-                    property_agent_fees: { label: "物业中介费/佣金", tooltip: "支付给物业经理的费用。", amortize: false, default: 2000 },
-                    repairs_maintenance: { label: "维修与保养", tooltip: "一般维修（例如：修理坏掉的围栏）。不包括资本改进。", amortize: false, default: 1000 },
-                    borrowing_expenses: { label: "借贷费用 (如：贷款手续费)", tooltip: "为获得贷款而产生的费用（例如：贷款设立费）。如果总额超过 $100，必须在 5 年内摊销。", amortize: true, default: 1500, threshold: 100, years: 5 },
-                    depreciation: { label: "资本免税额 (折旧)", tooltip: "对厂房和设备（例如：烤箱、地毯）磨损的抵扣。需要折旧报告。", amortize: false, default: 3000 },
-                    capital_works: { label: "资本工程抵扣 (建筑结构)", tooltip: "建筑物结构成本的抵扣（通常为每年 2.5%）。", amortize: false, default: 4000 },
-                    other_expenses: { label: "其他杂项支出 (如：文具、差旅)", tooltip: "任何其他必要的租赁支出（例如：检查物业的差旅费、会计费）。", amortize: false, default: 500 }
-                }
+                // Tooltip Content (Based on ATO Schedule)
+                tip_A: '租金收入包括租金、报销费用和租金损失的保险赔付。',
+                tip_B: '与租金相关的其他收入，例如取消租约的赔偿金。',
+                tip_D: '与寻找租户直接相关的费用（例如，网站列表、中介找租客费用）。',
+                tip_E: '可抵扣的物业管理费，不包括专门用于资本工程的储备金（Sinking Fund）部分。',
+                tip_F: '获取贷款的成本（例如，申请费、LMI）。如果 > $100，则按 5 年或剩余贷款年限的较短者摊销。如果 $\le$ $100，允许当年全额扣除。',
+                tip_G: '在租赁期间或新租户入住前产生的清洁费用。',
+                tip_H: '地方市政收取的费用。如果房产非全年出租，必须按比例分摊。',
+                tip_I: '折旧资产（例如，电器、空调）价值下降的抵扣。这是一项非现金支出。',
+                tip_J: '持续维护花园和草坪的费用。',
+                tip_K: '建筑、内容物和房东保险的保费。',
+                tip_L: '投资房产借款产生的利息。如果贷款用于混合目的（投资和私人用途），必须按比例分摊。',
+                tip_M: '州/领地对土地所有权征收的年度税。如果房产非全年出租，必须按比例分摊。',
+                tip_N: '与收入收取或租约终止直接相关的法律费用。购买、出售或捍卫产权的法律费用通常属于资本支出。',
+                tip_O: '与害虫防治和根除相关的费用。',
+                tip_P: '支付给房产中介的日常管理和服务费用（不包括找租客的费用，那是 D 类）。',
+                tip_Q: '修复因磨损或损坏导致的维修费用（例如，修理破损的围栏）。用于资本改进或更换的费用不可在此处抵扣。',
+                tip_R: '建筑结构价值下降的抵扣（通常需要工料测量师报告）。这是一项非现金支出。',
+                tip_S: '与管理房产相关的文具、电话费和邮费。',
+                tip_T: '检查房产的费用。必须与私人旅行严格区分。',
+                tip_U: '房东承担的水费。',
+                tip_V: '未在此处列出的杂项支出（例如，房产专用银行账户的银行费用）。私人/公共混合用途的账户费用必须分摊。',
             }
         };
 
-        let currentLang = 'en';
-        let chartInstance = null;
-
-        // --- Utility Functions ---
-
-        /**
-         * Formats a number as AUD currency.
-         * @param {number} value
-         * @returns {string} Formatted currency string.
-         */
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('en-AU', {
-                style: 'currency',
-                currency: 'AUD',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(value);
-        }
-
-        /**
-         * Gets the numeric value from an input field, defaulting to 0.
-         * @param {string} id The input element's ID.
-         * @returns {number} The parsed number.
-         */
-        function getInputValue(id) {
-            const el = document.getElementById(id);
-            return parseFloat(el.value) || 0;
-        }
-
-        /**
-         * Creates a labeled input field with tooltip for the form.
-         * @param {string} id Unique ID for the input.
-         * @param {string} labelText Display label text.
-         * @param {string} tooltipText Help text for the tooltip.
-         * @param {number} defaultValue Initial value.
-         * @returns {string} HTML string for the input group.
-         */
-        function createInputGroup(id, labelText, tooltipText, defaultValue) {
+        // --- DATA STRUCTURE ---
+        const incomeCategories = [
+            { id: 'income_A', labelKey: 'income_A', tipKey: 'tip_A' },
+            { id: 'income_B', labelKey: 'income_B', tipKey: 'tip_B' },
+        ];
+        
+        const expenseCategories = [
+            { id: 'expense_D', labelKey: 'expense_D', tipKey: 'tip_D', isBorrowing: false, isNonCash: false },
+            { id: 'expense_E', labelKey: 'expense_E', tipKey: 'tip_E', isBorrowing: false, isNonCash: false },
+            { id: 'expense_F', labelKey: 'expense_F', tipKey: 'tip_F', isBorrowing: true, isNonCash: false }, // Borrowing Expenses
+            { id: 'expense_G', labelKey: 'expense_G', tipKey: 'tip_G', isBorrowing: false, isNonCash: false },
+            { id: 'expense_H', labelKey: 'expense_H', tipKey: 'tip_H', isBorrowing: false, isNonCash: false },
+            { id: 'expense_I', labelKey: 'expense_I', tipKey: 'tip_I', isBorrowing: false, isNonCash: true }, // Depreciation
+            { id: 'expense_J', labelKey: 'expense_J', tipKey: 'tip_J', isBorrowing: false, isNonCash: false },
+            { id: 'expense_K', labelKey: 'expense_K', tipKey: 'tip_K', isBorrowing: false, isNonCash: false },
+            { id: 'expense_L', labelKey: 'expense_L', tipKey: 'tip_L', isBorrowing: false, isNonCash: false },
+            { id: 'expense_M', labelKey: 'expense_M', tipKey: 'tip_M', isBorrowing: false, isNonCash: false },
+            { id: 'expense_N', labelKey: 'expense_N', tipKey: 'tip_N', isBorrowing: false, isNonCash: false },
+            { id: 'expense_O', labelKey: 'expense_O', tipKey: 'tip_O', isBorrowing: false, isNonCash: false },
+            { id: 'expense_P', labelKey: 'expense_P', tipKey: 'tip_P', isBorrowing: false, isNonCash: false },
+            { id: 'expense_Q', labelKey: 'expense_Q', tipKey: 'tip_Q', isBorrowing: false, isNonCash: false },
+            { id: 'expense_R', labelKey: 'expense_R', tipKey: 'tip_R', isBorrowing: false, isNonCash: true }, // Capital Works
+            { id: 'expense_S', labelKey: 'expense_S', tipKey: 'tip_S', isBorrowing: false, isNonCash: false },
+            { id: 'expense_T', labelKey: 'expense_T', tipKey: 'tip_T', isBorrowing: false, isNonCash: false },
+            { id: 'expense_U', labelKey: 'expense_U', tipKey: 'tip_U', isBorrowing: false, isNonCash: false },
+            { id: 'expense_V', labelKey: 'expense_V', tipKey: 'tip_V', isBorrowing: false, isNonCash: false },
+        ];
+        
+        // --- INITIALIZATION ---
+        function generateInputHTML(category, type) {
+            const label = translations[currentLang][category.labelKey];
+            const tip = translations[currentLang][category.tipKey];
+            const initialValue = 0; // Always start at zero for a fresh calc
+            
             return `
-                <div class="input-group">
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="${id}" class="block text-sm font-medium text-gray-600">
-                            ${labelText}
-                        </label>
-                        <div class="tooltip-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span class="tooltip">${tooltipText}</span>
-                        </div>
+                <div class="input-group flex items-center">
+                    <label for="${category.id}" class="flex-1 block text-sm font-medium text-gray-700">${label}</label>
+                    
+                    <div class="tooltip-container mr-4">
+                        <span class="text-blue-500 hover:text-blue-700 cursor-help">&#x2139;</span>
+                        <div class="tooltip">${tip}</div>
                     </div>
-                    <input type="number" id="${id}" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" value="${defaultValue.toFixed(0)}" oninput="calculateNetRent()" min="0">
+
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-gray-500">${currencySymbol}</span>
+                        <input type="number" id="${category.id}" class="w-40 p-2 pl-8 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right" 
+                               min="0" value="${initialValue.toFixed(2)}" step="0.01" oninput="calculateNetRent()">
+                    </div>
                 </div>
             `;
         }
 
-        // --- Core Logic ---
-
-        /**
-         * Calculates the deductible portion of borrowing expenses based on ATO rules.
-         * @param {number} totalExpense Total borrowing expense amount.
-         * @param {number} threshold The minimum threshold for amortization (e.g., $100).
-         * @param {number} years The number of years for amortization (e.g., 5).
-         * @returns {number} The deductible amount for the current year.
-         */
-        function calculateBorrowingDeduction(totalExpense, threshold, years) {
-            if (totalExpense <= threshold) {
-                // If total expense is $100 or less, it's fully deductible in the year incurred.
-                return totalExpense;
-            } else {
-                // If total expense is more than $100, it's amortised over 5 years.
-                return totalExpense / years;
-            }
+        function renderInputs() {
+            document.getElementById('income-inputs').innerHTML = incomeCategories.map(cat => generateInputHTML(cat, 'income')).join('');
+            document.getElementById('expense-inputs').innerHTML = expenseCategories.map(cat => generateInputHTML(cat, 'expense')).join('');
+            calculateNetRent();
         }
 
-        /**
-         * The main function to calculate net rent and update the UI.
-         */
+        // --- CORE TAX LOGIC ---
         function calculateNetRent() {
-            const langData = LANGUAGES[currentLang];
-            let totalIncome = 0;
-            let totalDeductions = 0;
-            const expenseBreakdown = {};
+            let grossIncome = 0;
+            let totalExpenses = 0;
+            let borrowingExpenseFullDeductible = 0; // <= $100, fully deductible this year
+            let borrowingExpenseAmortized = 0;    // > $100, annual deductible amount
 
-            // 1. Calculate Total Income
-            for (const key in langData.income) {
-                const amount = getInputValue(`input-${key}`);
-                totalIncome += amount;
-            }
+            const loanTerm = parseFloat(document.getElementById('loanTerm').value) || 5; // Default to 5 years for safety
+            const amortizationPeriod = Math.min(loanTerm, 5); // ATO rule: max 5 years
 
-            // 2. Calculate Total Deductions
-            for (const key in langData.expense) {
-                const expenseConfig = langData.expense[key];
-                const amount = getInputValue(`input-${key}`);
-                let deductibleAmount = amount;
-
-                if (expenseConfig.amortize) {
-                    // Special ATO rule for Borrowing Expenses
-                    deductibleAmount = calculateBorrowingDeduction(
-                        amount, 
-                        expenseConfig.threshold, 
-                        expenseConfig.years
-                    );
-                }
-
-                totalDeductions += deductibleAmount;
-                expenseBreakdown[expenseConfig.label] = deductibleAmount;
-            }
-
-            // 3. Calculate Net Rent (Taxable Income/Loss)
-            const netRent = totalIncome - totalDeductions;
-
-            // 4. Update Results Dashboard
-            document.getElementById('result-total-income').textContent = formatCurrency(totalIncome);
-            document.getElementById('result-total-deductions').textContent = formatCurrency(totalDeductions);
-            document.getElementById('result-net-rent').textContent = formatCurrency(netRent);
-
-            // Update tax effect message
-            let taxEffectMessage = "";
-            if (netRent > 0) {
-                taxEffectMessage = currentLang === 'en' 
-                    ? `Taxable Income: This amount (${formatCurrency(netRent)}) will be added to your assessable income.`
-                    : `应税收入: 此金额 (${formatCurrency(netRent)}) 将计入您的应评税收入。`;
-                document.getElementById('result-net-rent').classList.replace('text-red-600', 'text-green-600');
-            } else if (netRent < 0) {
-                taxEffectMessage = currentLang === 'en' 
-                    ? `Tax Loss: This amount (${formatCurrency(Math.abs(netRent))}) may offset other taxable income (Negative Gearing).`
-                    : `税务亏损: 此金额 (${formatCurrency(Math.abs(netRent))}) 可用于抵消其他应税收入（负扣税）。`;
-                document.getElementById('result-net-rent').classList.replace('text-green-600', 'text-red-600');
-            } else {
-                taxEffectMessage = currentLang === 'en' 
-                    ? "Neutral Position: Income equals Deductions."
-                    : "中性头寸: 收入等于支出。";
-                document.getElementById('result-net-rent').classList.remove('text-green-600', 'text-red-600');
-                document.getElementById('result-net-rent').classList.add('text-blue-800');
-            }
-            document.getElementById('label-tax-effect').textContent = taxEffectMessage;
-
-            // 5. Update Chart
-            updateChart(expenseBreakdown);
-        }
-
-        /**
-         * Renders or updates the Chart.js instance.
-         * @param {Object<string, number>} data A map of expense label to deductible amount.
-         */
-        function updateChart(data) {
-            const chartLabels = Object.keys(data).filter(label => data[label] > 0);
-            const chartValues = Object.values(data).filter(value => value > 0);
-
-            if (chartInstance) {
-                chartInstance.data.labels = chartLabels;
-                chartInstance.data.datasets[0].data = chartValues;
-                chartInstance.update();
-                return;
-            }
-
-            const ctx = document.getElementById('expense-chart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        label: LANGUAGES[currentLang].section_summary_title,
-                        data: chartValues,
-                        backgroundColor: '#3b82f6', // Tailwind blue-500
-                        borderColor: '#1e40af', // Tailwind blue-800
-                        borderWidth: 1,
-                        borderRadius: 6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: currentLang === 'en' ? 'Deductible Amount (AUD)' : '抵扣金额 (澳元)'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += formatCurrency(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
+            // 1. Calculate Gross Income
+            incomeCategories.forEach(cat => {
+                const value = parseFloat(document.getElementById(cat.id).value) || 0;
+                grossIncome += value;
             });
-        }
 
-        // --- UI Rendering ---
+            // 2. Calculate Expenses (Including Borrowing Amortization)
+            expenseCategories.forEach(cat => {
+                let expenseValue = parseFloat(document.getElementById(cat.id).value) || 0;
 
-        /**
-         * Renders the input fields for a given category (income or expense).
-         * @param {string} containerId The ID of the container div.
-         * @param {Object} categoryConfig The language configuration object for the category.
-         */
-        function renderInputs(containerId, categoryConfig) {
-            const container = document.getElementById(containerId);
-            let html = '';
-            for (const key in categoryConfig) {
-                const item = categoryConfig[key];
-                html += createInputGroup(`input-${key}`, item.label, item.tooltip, item.default);
-            }
-            container.innerHTML = html;
-        }
-
-        /**
-         * Updates all static UI text based on the current language.
-         * @param {string} lang The target language code ('en' or 'zh').
-         */
-        function updateUI(lang) {
-            const langData = LANGUAGES[lang];
-            const elements = [
-                'app-title', 'section-input-title', 'section-loan-title', 'label-loan-term',
-                'section-income-title', 'section-expense-title', 'section-result-title',
-                'label-total-income', 'label-total-deductions', 'label-net-rent', 
-                'section-summary-title', 'disclaimer', 'lang-en', 'lang-zh'
-            ];
-
-            elements.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    if (id.startsWith('lang-')) {
-                        el.textContent = langData[id];
+                if (cat.isBorrowing) {
+                    // F: Borrowing Expenses Logic
+                    if (expenseValue > 100) {
+                        // Amortize over 5 years or loan term, whichever is shorter
+                        borrowingExpenseAmortized = expenseValue / amortizationPeriod;
+                        // Round to two decimal places
+                        borrowingExpenseAmortized = Math.round(borrowingExpenseAmortized * 100) / 100;
+                        totalExpenses += borrowingExpenseAmortized;
                     } else {
-                        el.textContent = langData[id];
+                        // Fully deductible if <= $100
+                        borrowingExpenseFullDeductible = expenseValue;
+                        totalExpenses += borrowingExpenseFullDeductible;
                     }
+                } else if (!cat.isNonCash) {
+                    // All other cash expenses
+                    totalExpenses += expenseValue;
+                } else {
+                    // I (Depreciation) and R (Capital Works) are Non-Cash (P&L only), not included in 'Total Expenses' for simple cash view
+                    // However, for the Net Rent calculation (which is a tax view), they MUST be included.
+                    // We treat them as part of totalExpenses for the final NET RENT figure (W)
+                    totalExpenses += expenseValue;
                 }
             });
 
-            // Update language toggle button styling
-            document.getElementById('lang-en').className = `text-sm font-semibold px-3 py-1 rounded-full transition-all duration-300 mr-2 ${lang === 'en' ? 'bg-white text-blue-800' : 'text-white hover:bg-blue-700'}`;
-            document.getElementById('lang-zh').className = `text-sm font-semibold px-3 py-1 rounded-full transition-all duration-300 ${lang === 'zh' ? 'bg-white text-blue-800' : 'text-white hover:bg-blue-700'}`;
-
-            // Re-render inputs to update labels and tooltips
-            renderInputs('income-inputs', langData.income);
-            renderInputs('expense-inputs', langData.expense);
+            // Round final total expenses to two decimal places
+            totalExpenses = Math.round(totalExpenses * 100) / 100;
             
-            // Recalculate and re-render the chart title
-            calculateNetRent(); 
+            // 3. Calculate Net Rent (X = C - W)
+            const netRent = grossIncome - totalExpenses;
+
+            // 4. Update UI
+            updateResultsUI(grossIncome, totalExpenses, netRent, borrowingExpenseAmortized, borrowingExpenseFullDeductible);
+            updateChart(totalExpenses, borrowingExpenseAmortized, borrowingExpenseFullDeductible);
         }
 
-        /**
-         * Sets the global language and updates the UI.
-         * @param {string} lang The new language code.
-         */
+        function updateResultsUI(grossIncome, totalExpenses, netRent, borrowingAmortized, borrowingFull) {
+            const netRentResultElement = document.getElementById('net-rent-result');
+            const netRentStatusElement = document.getElementById('net-rent-status');
+            
+            // Format results
+            const formattedNetRent = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(Math.abs(netRent));
+            const formattedGrossIncome = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(grossIncome);
+            const formattedTotalExpenses = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(totalExpenses);
+            const formattedBorrowingAmortized = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(borrowingAmortized);
+            const formattedBorrowingFull = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(borrowingFull);
+
+            // Display Net Rent
+            netRentResultElement.textContent = formattedNetRent;
+            
+            if (netRent > 0) {
+                netRentStatusElement.textContent = translations[currentLang].net_rent_positive;
+                netRentResultElement.classList.remove('text-red-300');
+                netRentResultElement.classList.add('text-green-300');
+            } else if (netRent < 0) {
+                netRentStatusElement.textContent = translations[currentLang].net_rent_negative;
+                netRentResultElement.classList.remove('text-green-300');
+                netRentResultElement.classList.add('text-red-300');
+            } else {
+                netRentStatusElement.textContent = translations[currentLang].net_rent_zero;
+                netRentResultElement.classList.remove('text-green-300', 'text-red-300');
+            }
+
+            // Display Breakdown
+            document.getElementById('gross-income-result').textContent = formattedGrossIncome;
+            document.getElementById('total-expenses-result').textContent = formattedTotalExpenses;
+            document.getElementById('borrowing-amortized-result').textContent = formattedBorrowingAmortized;
+            document.getElementById('borrowing-full-result').textContent = formattedBorrowingFull;
+        }
+
+        // --- CHART LOGIC ---
+        function updateChart(totalExpenses, borrowingAmortized, borrowingFull) {
+            const chartData = [];
+            const chartLabels = [];
+            
+            let totalCashExpensesForChart = 0; // Exclude non-cash (I, R) and amortized/full F
+
+            // 1. Collect Non-Borrowing/Non-Cash Expenses for Chart
+            expenseCategories.filter(cat => !cat.isBorrowing && !cat.isNonCash).forEach(cat => {
+                const value = parseFloat(document.getElementById(cat.id).value) || 0;
+                if (value > 0) {
+                    chartLabels.push(translations[currentLang][cat.labelKey].split(':')[0]); // Use short label (e.g., 'D: Advertising' -> 'D')
+                    chartData.push(value);
+                    totalCashExpensesForChart += value;
+                }
+            });
+
+            // 2. Add Borrowing Amortization and Full Deduction (if they represent a significant portion)
+            // Note: Per spec, chart focuses on cash expenses + P&L items, but for simplicity in this MVP visualization, 
+            // we will only show non-borrowing expenses to show proportions, as Borrowing Cost amortization amount is derived.
+
+            // 3. Collect Non-Cash Expenses (I and R) for Chart (as they are part of Total Expenses W)
+            expenseCategories.filter(cat => cat.isNonCash).forEach(cat => {
+                const value = parseFloat(document.getElementById(cat.id).value) || 0;
+                if (value > 0) {
+                    chartLabels.push(translations[currentLang][cat.labelKey].split(':')[0] + ' (Non-Cash)');
+                    chartData.push(value);
+                    totalCashExpensesForChart += value;
+                }
+            });
+
+            // 4. Add Borrowing Amortized amount to the chart data
+            if (borrowingAmortized > 0) {
+                chartLabels.push(translations[currentLang].expense_F.split(':')[0] + ' (Amortized)');
+                chartData.push(borrowingAmortized);
+                totalCashExpensesForChart += borrowingAmortized;
+            }
+            
+            // 5. Add Borrowing Full Deduction amount to the chart data
+            if (borrowingFull > 0) {
+                chartLabels.push(translations[currentLang].expense_F.split(':')[0] + ' (Full)');
+                chartData.push(borrowingFull);
+                totalCashExpensesForChart += borrowingFull;
+            }
+
+            if (expenseChart) {
+                expenseChart.data.labels = chartLabels;
+                expenseChart.data.datasets[0].data = chartData;
+                expenseChart.update();
+            } else {
+                const ctx = document.getElementById('expenseChart').getContext('2d');
+                expenseChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: [
+                                '#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6', 
+                                '#06b6d4', '#ec4899', '#f97316', '#a855f7', '#64748b',
+                                '#059669', '#2563eb', '#9333ea', '#db2777', '#facc15',
+                                '#4ade80', '#fb923c', '#eab308', '#be123c', '#4338ca'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // CRITICAL for chart-container sizing
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { size: 10 }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                        return `${label}: ${new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(value)} (${percentage})`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- EXPORT LOGIC ---
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            const currentDateTime = new Date().toISOString().slice(0, 10);
+            
+            const loanTerm = document.getElementById('loanTerm').value;
+            const netRent = parseFloat(document.getElementById('net-rent-result').textContent.replace(/[^0-9.-]+/g,"")) * (document.getElementById('net-rent-status').textContent.includes('Loss') ? -1 : 1);
+            const borrowingAmortized = parseFloat(document.getElementById('borrowing-amortized-result').textContent.replace(/[^0-9.-]+/g,""));
+            const borrowingFull = parseFloat(document.getElementById('borrowing-full-result').textContent.replace(/[^0-9.-]+/g,""));
+            
+            // Header Row (English for data compatibility)
+            csvContent += "Category,ATO Code,Amount ($),Description\r\n";
+            
+            // Income
+            csvContent += "--- INCOME ---\r\n";
+            incomeCategories.forEach(cat => {
+                const label = translations['en'][cat.labelKey];
+                const amount = (parseFloat(document.getElementById(cat.id).value) || 0).toFixed(2);
+                csvContent += `Income,${label.split(':')[0]},${amount},${label.split(': ')[1] || ''}\r\n`;
+            });
+            
+            // Expenses
+            csvContent += "--- EXPENSES ---\r\n";
+            expenseCategories.forEach(cat => {
+                const label = translations['en'][cat.labelKey];
+                const amount = (parseFloat(document.getElementById(cat.id).value) || 0).toFixed(2);
+                csvContent += `Expense,${label.split(':')[0]},${amount},${label.split(': ')[1] || ''}\r\n`;
+            });
+
+            // Summary
+            csvContent += "\r\n--- TAX SUMMARY ---\r\n";
+            csvContent += `Loan Term (Years),,${loanTerm}\r\n`;
+            csvContent += `Borrowing Expense (> $100) Annual Deduction,,${borrowingAmortized.toFixed(2)}\r\n`;
+            csvContent += `Borrowing Expense (<= $100) Annual Deduction,,${borrowingFull.toFixed(2)}\r\n`;
+            csvContent += `NET RENT (Taxable/Deductible),,${netRent.toFixed(2)}\r\n`;
+            
+            // Trigger Download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `AusPropertyTax_Report_${currentDateTime}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- LANGUAGE SWITCHING ---
         function setLanguage(lang) {
             currentLang = lang;
-            updateUI(currentLang);
-            // Store preference in localStorage (optional)
-            localStorage.setItem('calculatorLang', lang);
+            const t = translations[lang];
+
+            // Update static elements
+            document.getElementById('app-title').textContent = t.title;
+            document.getElementById('section-input-title').textContent = t.section_input_title;
+            document.getElementById('section-loan-title').textContent = t.section_loan_title;
+            document.getElementById('label-loan-term').textContent = t.label_loan_term;
+            document.getElementById('section-income-title').textContent = t.section_income_title;
+            document.getElementById('section-expense-title').textContent = t.section_expense_title;
+            document.getElementById('section-net-rent-title').textContent = t.section_net_rent_title;
+            document.getElementById('section-deductions-title').textContent = t.section_deductions_title;
+            document.getElementById('label-gross-income').textContent = t.label_gross_income;
+            document.getElementById('label-total-expenses').textContent = t.label_total_expenses;
+            document.getElementById('label-borrowing-amortized').textContent = t.label_borrowing_amortized;
+            document.getElementById('label-borrowing-full').textContent = t.label_borrowing_full;
+            document.getElementById('section-chart-title').textContent = t.section_chart_title;
+            document.getElementById('chart-description').textContent = t.chart_description;
+            document.getElementById('btn-export-csv').textContent = t.btn_export_csv;
+            document.getElementById('disclaimer').textContent = t.disclaimer;
+            
+            // Update language buttons styling
+            document.getElementById('lang-en').classList.toggle('bg-blue-600', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-white', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('bg-blue-700', lang !== 'en');
+            document.getElementById('lang-en').classList.toggle('text-gray-200', lang !== 'en');
+
+            document.getElementById('lang-zh').classList.toggle('bg-blue-600', lang === 'zh');
+            document.getElementById('lang-zh').classList.toggle('text-white', lang === 'zh');
+            document.getElementById('lang-zh').classList.toggle('bg-blue-700', lang !== 'zh');
+            document.getElementById('lang-zh').classList.toggle('text-gray-200', lang !== 'zh');
+
+            // Re-render dynamic content (inputs, chart)
+            renderInputs(); 
+            calculateNetRent();
         }
 
-        // --- Initialization ---
-
-        window.onload = function() {
-            // Load language preference or default to browser language
-            const storedLang = localStorage.getItem('calculatorLang');
-            const browserLang = navigator.language.startsWith('zh') ? 'zh' : 'en';
-            currentLang = storedLang || browserLang;
+        // --- WINDOW LOAD ---
+        window.onload = () => {
+            // Set default language and render UI
+            setLanguage('en'); 
             
-            setLanguage(currentLang);
-            
-            // Initial calculation (which is called by updateUI, but just in case)
-            calculateNetRent();
+            // Ensure inputs are rendered before calculating
+            renderInputs(); 
         };
-
     </script>
 </body>
 </html>
